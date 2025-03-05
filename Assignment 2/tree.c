@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "tree.h"
 
 static tree_node_t* insert_impl(tree_node_t* tree, char data) {}
@@ -44,4 +47,15 @@ int get_height(tree_node_t* tree) {
     }
 
     return 1 + right;
+}
+
+void destroy(tree_node_t* tree) {
+    if (!tree) {
+        return;
+    }
+
+    destroy(tree->left);
+    destroy(tree->right);
+
+    free(tree);
 }
