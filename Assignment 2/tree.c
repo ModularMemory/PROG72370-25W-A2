@@ -1,5 +1,13 @@
 #include "tree.h"
 
+static tree_node_t* insertImpl(tree_node_t* tree, int data) {}
+
+void insert(tree_node_t** tree, int data) {
+    *tree = insertImpl(tree, data);
+}
+
+bool contains(tree_node_t* tree, int data) {}
+
 int countNodes(tree_node_t* tree) {
     if (!tree) {
         return 0;
