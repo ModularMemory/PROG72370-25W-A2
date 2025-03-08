@@ -3,7 +3,35 @@
 
 #include "tree.h"
 
-static tree_node_t* insert_impl(tree_node_t* tree, char data) {}
+static tree_node_t* create_node(char data) {
+    tree_node_t* node = (tree_node_t*)malloc(sizeof(tree_node_t));
+    if (!node) {
+        fprintf(stderr, "Error: Failed to allocate new node.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
+
+    return node;
+}
+
+static tree_node_t* insert_impl(tree_node_t* tree, char data) {
+    if (!tree) {
+        return create_node(data);
+    }
+
+    int a = data - tree->data;
+    if (a < 0) {
+        tree->left = insert_impl(tree->left, data);
+    }
+    else {
+        tree->right = insert_impl(tree->right, data);
+    }
+
+    return tree;
+}
 
 void insert(tree_node_t** tree, char data) {
     *tree = insert_impl(tree, data);
