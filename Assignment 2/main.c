@@ -19,6 +19,8 @@ int main(void) {
     BTree tree = create_tree();
 
     int insert_count = rand_range(11, 21);
+    printf("Inserting %d chars into the tree...\n", insert_count);
+
     for (int i = 0; i < insert_count; i++) {
         char c = (char)rand_range('a', 'z' + 1);
         insert(tree, c);
