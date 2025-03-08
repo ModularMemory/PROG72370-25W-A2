@@ -8,12 +8,18 @@ typedef struct tree_node {
     struct treeNode* right;
 } tree_node_t;
 
-void insert(tree_node_t** tree, char data);
+typedef struct b_tree {
+    tree_node_t* head;
+} *BTree;
 
-bool contains(tree_node_t* tree, char data);
+BTree create_tree(void);
 
-int count_nodes(tree_node_t* tree);
+void insert(BTree tree, char data);
 
-int get_height(tree_node_t* tree);
+bool contains(BTree tree, char data);
 
-void destroy(tree_node_t* tree);
+int count_nodes(BTree tree);
+
+int get_height(BTree tree);
+
+void destroy_tree(BTree tree);

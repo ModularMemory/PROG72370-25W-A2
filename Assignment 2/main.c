@@ -16,12 +16,12 @@ static unsigned int rand_range(unsigned int min_incl, unsigned int max_excl) {
 int main(void) {
     srand(time(NULL));
 
-    tree_node_t* tree = NULL;
+    BTree tree = create_tree();
 
     int insert_count = rand_range(11, 21);
     for (int i = 0; i < insert_count; i++) {
         char c = (char)rand_range('a', 'z' + 1);
-        insert(&tree, c);
+        insert(tree, c);
     }
 
     for (char c = 'a'; c <= 'z'; c++) {
@@ -34,7 +34,7 @@ int main(void) {
 
     printf("The tree is %d layers tall.\n", get_height(tree));
 
-    destroy(tree);
+    destroy_tree(tree);
 
     return 0;
 }

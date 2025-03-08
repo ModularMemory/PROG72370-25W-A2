@@ -3,6 +3,18 @@
 
 #include "tree.h"
 
+BTree create_tree(void) {
+    BTree tree = (BTree)malloc(sizeof(struct b_tree));
+    if (!tree) {
+        fprintf(stderr, "Error: Failed to allocate new tree.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    tree->head = NULL;
+
+    return tree;
+}
+
 static tree_node_t* create_node(char data) {
     tree_node_t* node = (tree_node_t*)malloc(sizeof(tree_node_t));
     if (!node) {
@@ -17,58 +29,66 @@ static tree_node_t* create_node(char data) {
     return node;
 }
 
-static tree_node_t* insert_impl(tree_node_t* tree, char data) {
-    if (!tree) {
+static tree_node_t* insert_impl(tree_node_t* node, char data) {
+    if (!node) {
         return create_node(data);
     }
 
-    int a = data - tree->data;
+    int a = data - node->data;
     if (a < 0) {
-        tree->left = insert_impl(tree->left, data);
+        node->left = insert_impl(node->left, data);
     }
     else {
-        tree->right = insert_impl(tree->right, data);
+        node->right = insert_impl(node->right, data);
     }
 
-    return tree;
+    return node;
 }
 
-void insert(tree_node_t** tree, char data) {
-    *tree = insert_impl(tree, data);
+void insert(BTree tree, char data) {
+    tree->head = insert_impl(tree->head, data);
 }
 
-bool contains(tree_node_t* tree, char data) {
-    if (!tree) {
+static bool contains_impl(tree_node_t* node, char data) {
+    if (!node) {
         return false;
     }
 
-    int a = data - tree->data;
+    int a = data - node->data;
     if (a == 0) {
         return true;
     }
 
     if (a < 0) {
-        return contains(tree->left, data);
+        return contains_impl(node->left, data);
     }
 
-    return contains(tree->right, data);
+    return contains_impl(node->right, data);
 }
 
-int count_nodes(tree_node_t* tree) {
-    if (!tree) {
+bool contains(BTree tree, char data) {
+    return contains_impl(tree->head, data);
+}
+
+static int count_nodes_impl(tree_node_t* node) {
+    if (!node) {
         return 0;
     }
 
-    return count_nodes(tree->left) + count_nodes(tree->right) + 1;
+    return count_nodes_impl(node->left) + count_nodes_impl(node->right) + 1;
 }
 
-int get_height(tree_node_t* tree) {
-    if (!tree) {
+int count_nodes(BTree tree) {
+    return count_nodes_impl(tree->head);
+}
+
+static int get_height_impl(tree_node_t* node) {
+    if (!node) {
         return -1;
     }
 
-    int left = get_height(tree->left);
-    int right = get_height(tree->right);
+    int left = get_height_impl(node->left);
+    int right = get_height_impl(node->right);
 
     if (left > right) {
         return 1 + left;
@@ -77,13 +97,22 @@ int get_height(tree_node_t* tree) {
     return 1 + right;
 }
 
-void destroy(tree_node_t* tree) {
-    if (!tree) {
+int get_height(BTree tree) {
+    return get_height_impl(tree->head);
+}
+
+static void destroy_impl(tree_node_t* node) {
+    if (!node) {
         return;
     }
 
-    destroy(tree->left);
-    destroy(tree->right);
+    destroy_impl(node->left);
+    destroy_impl(node->right);
 
+    free(node);
+}
+
+void destroy_tree(BTree tree) {
+    destroy_impl(tree->head);
     free(tree);
 }
