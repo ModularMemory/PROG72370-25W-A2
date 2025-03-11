@@ -4,8 +4,8 @@
 
 typedef struct tree_node {
     char data;
-    struct treeNode* left;
-    struct treeNode* right;
+    struct tree_node* left;
+    struct tree_node* right;
 } tree_node_t;
 
 typedef struct b_tree {
